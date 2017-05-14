@@ -8,11 +8,34 @@
 import sys
 
 test_data = ['4 8', '1 2 6', '1 3 2', '1 4 10', '2 4 4', '3 1 5', '3 2 3', '3 4 8', '4 2 1', '1 4']
+# test_matrix = [[1000000, 6, 2, 10], [1000000, 1000000, 1000000, 4], [5, 3, 1000000, 8], [1000000, 1, 1000000, 1000000]]
 
 flag = True
 matrix = []
+test_matrix = []
 
-for inp in test_data: # sys.stdin:
+
+def DeikstraAlgo(Npin, StartPin, StopPin, matrix):
+    valid = [True]*Npin
+    weight = [sys.maxsize]*Npin
+    weight[StartPin - 1] = 0
+    for i in range(Npin):
+        min_weight = sys.maxsize + 1
+        id_min_weight = -1
+        for i in range(len(weight)):
+            if valid[i] and weight[i] < min_weight:
+                min_weight = weight[i]
+                id_min_weight = i
+        for i in range(Npin):
+            if weight[id_min_weight] + matrix[id_min_weight][i] < weight[i]:
+                weight[i] = weight[id_min_weight] + matrix[id_min_weight][i]
+        valid[id_min_weight] = False
+    if weight[StopPin-1] == sys.maxsize:
+        return -1
+    else:
+        return weight[StopPin-1]
+
+for inp in sys.stdin:
     [*args] = inp.strip().split(' ')
     for i in range(len(args)):
         args[i] = int(args[i])
@@ -25,35 +48,14 @@ for inp in test_data: # sys.stdin:
         finish = int(args[1])
     else:
         matrix.append(args)
-    print(args, len(args))
-
-buttons = []
-distance = []
-checked_v = []
 
 for i in range(size):
-    distance.append(sys.maxsize)
-    checked_v.append(1)
+    line = []
+    for j in range(size):
+        line.append(sys.maxsize)
+    test_matrix.append(line)
 
-distance[0] = 0
+for i in range(paths):
+    test_matrix[matrix[i][0] - 1][matrix[i][1] - 1] = matrix[i][2]
 
-while True:
-    minindex = sys.maxsize
-    min = sys.maxsize
-
-
-
-
-
-
-
-
-
-    if minindex >= sys.maxsize:
-        break
-
-print(size, paths, start, finish)
-print(matrix)
-print(matrix[0][0], matrix[1][0], matrix[2][0])
-print(distance, checked_v)
-print(done)
+print(DeikstraAlgo(size, start, finish, test_matrix))
